@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs'); //simulate dB writeFile db.json
 const notes = require('./db/db.json')
+// Helper method for generating unique ids
+const uuid = require('./helpers/uuid');
 
 const app = express();
 
@@ -36,6 +38,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
+            review_id: uuid(),
         };
 
        const response = {
@@ -55,7 +58,7 @@ app.post('/api/notes', (req, res) => {
       parsedNotes.push(newNote);
 
       // Write updated notes back to the file
-      fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 4),
+      fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 10),
           (writeErr) => 
             writeErr ? console.error(writeErr) : console.info('Successfully updated notes!')
           );
