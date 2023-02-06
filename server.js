@@ -18,7 +18,7 @@ app.use(express.static('public'));
 //serve up public folder & files
 app.get('/', (req, res) => res.send('Navigate to /send our /routes'));
 
-app.get('/index', (req, res) =>
+app.get(' *', (req, res) =>
   res.sendFile(path.join(__dirname, 'public/index.html'))
 );
 
@@ -93,7 +93,8 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
-
+//future to incorporate - read all notes from db.json, remove note with given NoteId and rewrite the notes to db.json file
+//method needed?
   app.delete('/api/notes/:noteId', (req, res) => {
     console.log("Delete Request Called for /api/notes/noteId endpoint")
     res.send("Delete Request Called")
