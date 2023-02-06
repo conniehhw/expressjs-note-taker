@@ -1,25 +1,17 @@
 [
-    {
-        "title": "Test Title",
-        "text": "Test text"
-    },
-    {
-        "title": "Note 1",
-        "text": "Note text 1",
-        "review_id": "9181"
-    },
-    {
-        "title": "Note 2",
-        "text": "Note Tx 2",
-        "review_id": "f024"
-    },
-    {
-        "title": "Please work",
-        "text": "Please work text"
-    },
-    {
-        "title": "Please work 1",
-        "text": "Please work text 2",
-        "review_id": "c882"
-    }
+          {
+                    "title": "Test Title",
+                    "text": "Test text"
+          },
+          {
+                    "title": "Note 1",
+                    "text": "Note text 1",
+                    "noteId": "9181"
+          },
+          {
+                    "title": "Note 2",
+                    "text": "Note text 2",
+                    "noteId": "6e45"
+          }
+     
 ]

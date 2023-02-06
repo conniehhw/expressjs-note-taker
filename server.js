@@ -13,10 +13,9 @@ const PORT = 3001;
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-//serve up public folder & files
 app.use(express.static('public'));
 
+//serve up public folder & files
 app.get('/', (req, res) => res.send('Navigate to /send our /routes'));
 
 app.get('/index', (req, res) =>
@@ -30,6 +29,27 @@ app.get('/notes', (req, res) =>
 //GET request for notes
 app.get('/api/notes', (req, res) => res.json(notes));
 
+// GET request for a single note
+app.get('/api/notes/:noteId', (req, res) => {
+//   return res.json(req.params.noteId);
+// });
+
+    if (req.params.noteId) {
+      console.info(`${req.method} request received to get a single a note`);
+      const noteId = req.params.noteId;
+      for (let i = 0; i < notes.length; i++) {
+        const currentNote = notes[i];
+        if (currentNote.noteId === noteId) {
+          res.json(currentNote);
+          return;
+        }
+      }
+      res.status(404).send('Note not found');
+    } else {
+      res.status(400).send('Note ID not provided');
+    };
+  });
+
 //PUSH request for newNote
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
@@ -38,7 +58,7 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            review_id: uuid(),
+            noteId: uuid(),
         };
 
        const response = {
@@ -66,14 +86,20 @@ app.post('/api/notes', (req, res) => {
       });
        
 
-       console.log(response);
-       res.json(response);
+       console.log(response); 
+       res.json(response); 
     } else {
         res.json('Error in posting note');
     }
 });
 
-    
+
+  app.delete('/api/notes/:noteId', (req, res) => {
+    console.log("Delete Request Called for /api/notes/noteId endpoint")
+    res.send("Delete Request Called")
+  })
+
+
 app.listen(PORT, () => { // listen for specific port for icmoing request
     console.log(`Express server listening for incoming requests on PORT: ${PORT}`)
 });

@@ -33,6 +33,7 @@ const getNotes = () =>
     },
   });
 
+
 const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
@@ -40,7 +41,9 @@ const saveNote = (note) =>
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(note),
-  });
+  });                                
+
+
 
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
@@ -53,7 +56,7 @@ const deleteNote = (id) =>
 const renderActiveNote = () => {
   hide(saveNoteBtn);
 
-  if (activeNote.id) {
+  if (activeNote.noteId) {
     noteTitle.setAttribute('readonly', true);
     noteText.setAttribute('readonly', true);
     noteTitle.value = activeNote.title;
@@ -89,6 +92,8 @@ const handleNoteDelete = (e) => {
     activeNote = {};
   }
 
+////////////
+
   deleteNote(noteId).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -101,6 +106,8 @@ const handleNoteView = (e) => {
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
   renderActiveNote();
 };
+
+
 
 // Sets the activeNote to and empty object and allows the user to enter a new note
 const handleNewNoteView = (e) => {
@@ -133,7 +140,7 @@ const renderNoteList = async (notes) => {
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
     spanEl.innerText = text;
-    spanEl.addEventListener('click', handleNoteView);
+    spanEl.addEventListener('click', handleNoteView);// click on list-item-title -> sets activeNote & displays it
 
     liEl.append(spanEl);
 
@@ -171,13 +178,14 @@ const renderNoteList = async (notes) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => getNotes().then(renderNoteList); //getNotes()=fetchGET, renderNoteList = renders list of note titles
 
 if (window.location.pathname === '/notes') {
-  saveNoteBtn.addEventListener('click', handleNoteSave);
-  newNoteBtn.addEventListener('click', handleNewNoteView);
+  saveNoteBtn.addEventListener('click', handleNoteSave); // ln 69 saveNote()= fetchPOST; const newNote, then getAndRenderNotes
+  newNoteBtn.addEventListener('click', handleNewNoteView); //ln 106, sets activeNote to an empty object (clears it)
   noteTitle.addEventListener('keyup', handleRenderSaveBtn);
   noteText.addEventListener('keyup', handleRenderSaveBtn);
+
 }
 
 getAndRenderNotes();
