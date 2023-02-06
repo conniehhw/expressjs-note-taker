@@ -1,5 +1,8 @@
+const { notDeepStrictEqual } = require('assert');
 const express = require('express');
 const path = require('path');
+const fs = require('fs'); //simulate dB writeFile db.json
+const notes = require('./db/db.json')
 
 const app = express();
 
@@ -22,7 +25,53 @@ app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, 'public/notes.html'))
 );
        
+//GET request for notes
+app.get('/api/notes', (req, res) => res.json(notes));
 
+//PUSH request for newNote
+app.post('/api/notes', (req, res) => {
+    const { title, text } = req.body;
+
+    if (title && text) {
+        const newNote = {
+            title,
+            text,
+        };
+
+       const response = {
+        status: 'success',
+        body: newNote,
+       };
+
+    //
+       fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if(err) {
+          console.error(err);
+        } else {
+        // convert string into JSON object
+        const parsedNotes = JSON.parse(data);
+        
+      //  Add new note
+      parsedNotes.push(newNote);
+
+      // Write updated notes back to the file
+      fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 4),
+          (writeErr) => 
+            writeErr ? console.error(writeErr) : console.info('Successfully updated notes!')
+          );
+        }
+      });
+       
+
+       console.log(response);
+       res.json(response);
+    } else {
+        res.json('Error in posting note');
+    }
+});
+
+    
 app.listen(PORT, () => { // listen for specific port for icmoing request
     console.log(`Express server listening for incoming requests on PORT: ${PORT}`)
 });
+
